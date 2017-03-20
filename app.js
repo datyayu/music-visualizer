@@ -18,18 +18,15 @@ var javascriptNode;
 var sourceNode;
 var analyser;
 
+var ongaku = new Ongaku({
+    onPlaybackPause: clearSpectrum
+})
 
-// create a gradient for the fill. Note the strange
-// offset, since the gradient is calculated based on
-// the canvas, not the specific element we draw
-
-
-// load the sound
-setupAudioNodes(audioCtx);
-loadSound(AUDIO_FILE, audioCtx);
+setupAnalyser(ongaku.getContext());
+ongaku.playAudio(AUDIO_FILE)
 
 
-function setupAudioNodes(context) {
+function setupAnalyser(context) {
     // setup a javascript node
     javascriptNode = context.createScriptProcessor(2048, 1, 1);
     // connect to destination, else it isn't called
@@ -41,38 +38,15 @@ function setupAudioNodes(context) {
     analyser.fftSize = 512;
 
     // create a buffer source node
-    sourceNode = context.createBufferSource();
-    sourceNode.connect(analyser);
+    ongaku.connectNode(analyser);
     analyser.connect(javascriptNode);
-
-    sourceNode.connect(context.destination);
 }
 
-// load the specified sound
-function loadSound(url, context) {
-    var request = new XMLHttpRequest();
-    request.open('GET', url, true);
-    request.responseType = 'arraybuffer';
-
-    // When loaded decode the data
-    request.onload = function() {
-        // decode the data
-        context.decodeAudioData(request.response, playSound, function(error) {
-            console.log(error)
-        });
-    }
-
-    request.send();
-}
-
-
-function playSound(buffer) {
-    sourceNode.buffer = buffer;
-    sourceNode.start(0);
-}
 
 
 javascriptNode.onaudioprocess = function() {
+    if (!ongaku.isPlaying()) return;
+
     // get the average for the first channel
     var array = new Uint8Array(analyser.frequencyBinCount);
     analyser.getByteFrequencyData(array);
@@ -87,16 +61,28 @@ function drawSpectrum(array) {
     canvasCtx.clearRect(0, 0, 1000, CANVAS_HEIGHT)
     canvasCtx.fillStyle = '#ffffff'
 
-    console.log(array.map(item => CANVAS_HEIGHT-item))
-
     // Draw new spectrum
     array.forEach(function(value, index) {
         if (index % SKIPPED_VALUES !==0) return
 
         var x = (index / SKIPPED_VALUES) * 7
-        var y = CANVAS_HEIGHT - ( value / 6 )
+        var y = CANVAS_HEIGHT - ( value / 10 )
 
         canvasCtx.fillRect(x, y, 5, CANVAS_HEIGHT)
     })
 }
 
+function clearSpectrum() {
+    canvasCtx.clearRect(0, 0, 1000, CANVAS_HEIGHT)
+    canvasCtx.fillStyle = '#ffffff'
+
+    var array = new Array(256).fill(0)
+
+    array.forEach(function(_, index) {
+        if (index % SKIPPED_VALUES !==0) return
+
+        var x = (index / SKIPPED_VALUES) * 7
+
+        canvasCtx.fillRect(x, CANVAS_HEIGHT, 5, CANVAS_HEIGHT)
+    })
+}
