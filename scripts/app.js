@@ -8,18 +8,25 @@ if (! window.AudioContext) {
 
 var CANVAS_HEIGHT = 100
 var SKIPPED_VALUES = 3
-var AUDIO_FILE = 'https://s3-us-west-1.amazonaws.com/raji-demo/audio/kyousogiga_op/01.lite.mp3'
-var audioCtx = new AudioContext();
+var BAR_WIDTH = 8;
+var AUDIO_FILE = 'https://s3-us-west-1.amazonaws.com/experiments-static/02+8films.mp3'
+
+
+var $canvas = document.getElementById('js-canvas')
+var $progressBar = document.getElementById('js-progress')
 
 // get the context from the canvas to draw on
-var $canvas = document.getElementById('canvas')
 var canvasCtx = $canvas.getContext('2d')
+var audioCtx = new AudioContext();
 var javascriptNode;
 var sourceNode;
 var analyser;
 
 var ongaku = new Ongaku({
-    onPlaybackPause: clearSpectrum
+    onPlaybackPause: clearSpectrum,
+    onPlaybackEnd: function() {
+        ongaku.playAudio(AUDIO_FILE)
+    }
 })
 
 setupAnalyser(ongaku.getContext());
@@ -54,22 +61,23 @@ javascriptNode.onaudioprocess = function() {
 
     // Draw the spectrum
     drawSpectrum(array);
+    updateProgress();
 }
 
 
 function drawSpectrum(array) {
     // clear the current state
-    canvasCtx.clearRect(0, 0, 1000, CANVAS_HEIGHT)
+    canvasCtx.clearRect(0, 0, 1000, CANVAS_HEIGHT * 2)
     canvasCtx.fillStyle = '#ffffff'
 
     // Draw new spectrum
     array.forEach(function(value, index) {
         if (index % SKIPPED_VALUES !==0) return
 
-        var x = (index / SKIPPED_VALUES) * 7
+        var x = (index / SKIPPED_VALUES) * (BAR_WIDTH + (1/5 * BAR_WIDTH))
         var y = CANVAS_HEIGHT - (Math.max(value - 100, 0) / 5)
 
-        canvasCtx.fillRect(x, y, 5, CANVAS_HEIGHT)
+        canvasCtx.fillRect(x, y, BAR_WIDTH, CANVAS_HEIGHT)
     })
 }
 
@@ -82,8 +90,17 @@ function clearSpectrum() {
     array.forEach(function(_, index) {
         if (index % SKIPPED_VALUES !==0) return
 
-        var x = (index / SKIPPED_VALUES) * 7
+        var x = (index / SKIPPED_VALUES) * (BAR_WIDTH + (1/5 * BAR_WIDTH))
 
-        canvasCtx.fillRect(x, CANVAS_HEIGHT, 5, CANVAS_HEIGHT)
+        canvasCtx.fillRect(x, CANVAS_HEIGHT, BAR_WIDTH, CANVAS_HEIGHT)
     })
+}
+
+function updateProgress() {
+    var totalDuration = ongaku.getCurrentBufferDuration();
+    var currentProgress = ongaku.getPlaybackTime();
+
+    var progressPercentage = (currentProgress / totalDuration) * 100
+
+    $progressBar.style.width = progressPercentage + '%'
 }
