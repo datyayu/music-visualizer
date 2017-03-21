@@ -140,3 +140,24 @@ body:after {
   from { transform: rotateZ(0deg); }
   to { transform: rotateZ(360deg); }
 }
+
+
+@media screen and (max-width: 600px) {
+  .container {
+    width: 300px;
+  }
+
+  .canvas {
+    width: 300px;
+    top: -70px;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .container {
+    bottom: 10px;
+    right: 0;
+    left: 0;
+    margin: 0 auto;
+  }
+}
