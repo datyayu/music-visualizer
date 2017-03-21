@@ -13,7 +13,10 @@ var AUDIO_FILE = 'https://s3-us-west-1.amazonaws.com/experiments-static/02+8film
 
 
 var $canvas = document.getElementById('js-canvas')
-var $progressBar = document.getElementById('js-progress')
+var $progressContainer = document.getElementById('js-progress')
+var $progressBar = document.getElementById('js-bar')
+var $playIcon = document.getElementById('js-play-icon')
+var $playIconContainer = document.getElementById('js-play-icon-container')
 
 // get the context from the canvas to draw on
 var canvasCtx = $canvas.getContext('2d')
@@ -26,6 +29,16 @@ var ongaku = new Ongaku({
     onPlaybackPause: clearSpectrum,
     onPlaybackEnd: function() {
         ongaku.playAudio(AUDIO_FILE)
+    },
+    onPlaybackPause: function() {
+        clearSpectrum();
+        $playIcon.innerText = "play_arrow"
+    },
+    onPlaybackStart: function() {
+        $playIcon.innerText = "pause"
+    },
+    onBufferLoaded: function() {
+        $playIcon.classList.remove('animate');
     }
 })
 
@@ -104,3 +117,21 @@ function updateProgress() {
 
     $progressBar.style.width = progressPercentage + '%'
 }
+
+
+/***************
+**  LISTENERS **
+****************/
+
+$progressContainer.addEventListener('click', function(event) {
+    const percentage = (event.offsetX / 499) * 100;
+    ongaku.seekPercentage(percentage);
+})
+
+$playIconContainer.addEventListener('click', function() {
+    if (ongaku.isPlaying()) {
+        ongaku.pause();
+    } else {
+        ongaku.play();
+    }
+})

@@ -47,12 +47,18 @@ body:after {
   background: rgba(0,0,0,.5);
   width: 100%;
 }
+
+.song-image-container {
+  position: relative;
+}
+
 .song-image {
   width: 75px;
   height: 75px;
   padding: 3px;
   border: 1px solid white;
 }
+
 .song-text {
   margin-left: 1em;
   display: flex;
@@ -61,12 +67,14 @@ body:after {
   padding: .5em 0;
   box-sizing: border-box;
 }
+
 .song-title {
   font-size: 1.75em;
   color: #ffffff;
   margin: 0;
   font-weight: normal;
 }
+
 .song-artist {
   font-size: 1.2em;
   margin: 0;
@@ -80,11 +88,55 @@ body:after {
   border: 1px solid white;
   box-sizing: border-box;
   margin: 0 0 2px 0;
-  padding: 1px
+  padding: 1px;
+  cursor: pointer;
 }
 
 .song-current-progress {
   background: white;
   height: 100%;
   width: 0;
+}
+
+.song-icon {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 4em;
+  color: rgba(0,0,0,.5);
+  transition: 200ms color ease-in-out;
+  z-index: 9;
+  cursor: pointer;
+}
+
+.song-image-container:after {
+  content: "";
+  width: 75px;
+  height: 75px;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: rgba(0,0,0,0);
+  transition: 200ms background ease-in-out;
+  cursor: pointer;
+}
+
+.song-image-container:hover:after {
+  background: rgba(0,0,0,0.5);
+}
+
+.song-image-container:hover .song-icon {
+  color: #d3d3d3;
+}
+
+.song-icon.animate {
+  animation: 2500ms loading infinite;
+  animation-timing-function: linear;
+  will-change: transform;
+}
+
+
+@keyframes loading {
+  from { transform: rotateZ(0deg); }
+  to { transform: rotateZ(360deg); }
 }
