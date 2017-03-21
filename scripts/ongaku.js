@@ -34,6 +34,7 @@ class Ongaku {
         this.getPlaybackTime = this.getPlaybackTime.bind(this);
         this.isPlaying = this.isPlaying.bind(this);
         this.getCurrentBufferDuration = this.getCurrentBufferDuration.bind(this);
+        this.playFromLocalBuffer = this.playFromLocalBuffer.bind(this)
     }
 
 
@@ -57,6 +58,18 @@ class Ongaku {
 
     _getUpdatedPlaybackTime() {
         return (Date.now() - this._startTime)/1000 + this._onPausePlaybackTime;
+    }
+
+    playFromLocalBuffer(buffer) {
+        this._audioCtx.decodeAudioData(buffer, (decodedBuffer) => {
+            this._buffer = decodedBuffer;
+
+            if (this._callbacks.onBufferLoaded) {
+                this._callbacks.onBufferLoaded();
+            }
+
+            this.play();
+        });
     }
 
     getContext() {

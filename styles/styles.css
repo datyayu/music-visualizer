@@ -161,3 +161,27 @@ body:after {
     margin: 0 auto;
   }
 }
+
+.file-drop {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 300ms ease-in-out;
+}
+
+.drag-text {
+  color: white;
+  text-align: center;
+  transition: opacity 300ms ease-in-out;
+  opacity: 0;
+}
+
+.drag-active .drag-text {
+  opacity: 1;
+}
+
+.file-drop.drag-active {
+  background: rgba(0,0,0,0.5);
+}

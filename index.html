@@ -11,6 +11,10 @@
   <link rel="stylesheet" href="./styles/styles.css">
 </head>
 <body>
+  <div class="file-drop" id="js-file-input">
+      <h1 class="drag-text"> Drop audio file to play </h1>
+  </div>
+
   <div class="container">
     <canvas class="canvas" id="js-canvas" width="499px" height="105px"></canvas>
 
@@ -21,12 +25,12 @@
     <div class="song-info">
         <div class="song-image-container" id="js-play-icon-container">
             <i class="material-icons song-icon animate" id="js-play-icon">autorenew</i>
-            <img src="./images/album.jpg" alt="album cover" class="song-image">
+            <img src="./images/album.jpg" alt="album cover" id="js-song-cover" class="song-image">
         </div>
 
         <div class="song-text">
-            <h2 class="song-title">8films</h1>
-            <h2 class="song-artist">Uchu conbini</h2>
+            <h2 class="song-title" id="js-song-name">8films</h1>
+            <h2 class="song-artist" id="js-song-artist">Uchu conbini</h2>
         </div>
     </div>
 

@@ -17,6 +17,10 @@ var $progressContainer = document.getElementById('js-progress')
 var $progressBar = document.getElementById('js-bar')
 var $playIcon = document.getElementById('js-play-icon')
 var $playIconContainer = document.getElementById('js-play-icon-container')
+var $fileInput = document.getElementById('js-file-input')
+var $songName = document.getElementById('js-song-name')
+var $songArtist = document.getElementById('js-song-artist')
+var $songCover = document.getElementById('js-song-cover')
 
 // get the context from the canvas to draw on
 var canvasCtx = $canvas.getContext('2d')
@@ -134,4 +138,36 @@ $playIconContainer.addEventListener('click', function() {
     } else {
         ongaku.play();
     }
+})
+
+$fileInput.addEventListener('dragover', function(evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    evt.dataTransfer.dropEffect = 'copy'
+    $fileInput.classList.add('drag-active')
+})
+
+$fileInput.addEventListener('dragleave', function(evt) {
+    $fileInput.classList.remove('drag-active')
+})
+
+$fileInput.addEventListener('drop', function(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    ongaku.stop();
+
+    $fileInput.classList.remove('drag-active')
+
+    var file = evt.dataTransfer.files[0];
+    $songName.innerText = file.name.replace(/\.[0-9a-z]+$/, '')
+    $songArtist.innerText = '(Local file)'
+    $songCover.src = './images/default-album.png'
+
+    var reader = new FileReader();
+
+    reader.onload = function(evt) {
+        ongaku.playFromLocalBuffer(evt.target.result);
+    };
+
+    reader.readAsArrayBuffer(file);
 })
