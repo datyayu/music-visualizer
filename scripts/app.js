@@ -23,6 +23,7 @@ var ongaku = new Ongaku({
 })
 
 setupAnalyser(ongaku.getContext());
+clearSpectrum();
 ongaku.playAudio(AUDIO_FILE)
 
 
@@ -66,7 +67,7 @@ function drawSpectrum(array) {
         if (index % SKIPPED_VALUES !==0) return
 
         var x = (index / SKIPPED_VALUES) * 7
-        var y = CANVAS_HEIGHT - ( value / 10 )
+        var y = CANVAS_HEIGHT - (Math.max(value - 100, 0) / 5)
 
         canvasCtx.fillRect(x, y, 5, CANVAS_HEIGHT)
     })

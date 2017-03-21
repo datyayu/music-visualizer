@@ -1,0 +1,66 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  min-width: 100vw;
+  min-height: 100vh;
+  overflow: hidden;
+  font-family: "exo 2", sans-serif, arial;
+}
+
+body {
+  background-image: url('../images/bg.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+}
+
+.container {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  min-width: 434px;
+  width: 434px;
+  max-width: 434px;
+}
+
+.canvas {
+  position: absolute;
+  top: -115px;
+  left: 0;
+}
+
+.song-info {
+  display: inline-flex;
+  background: rgba(0,0,0,.5);
+  width: 100%;
+}
+.song-image {
+  width: 75px;
+  height: 75px;
+  padding: 3px;
+  border: 3px solid white;
+}
+.song-text {
+  margin-left: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: .5em 0;
+  box-sizing: border-box;
+}
+.song-title {
+  font-size: 1.75em;
+  color: #ffffff;
+  margin: 0;
+  font-weight: normal;
+}
+.song-artist {
+  font-size: 1.2em;
+  margin: 0;
+  font-weight: lighter;
+  color: #d4d4d4;
+}
